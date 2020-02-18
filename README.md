@@ -1,13 +1,13 @@
-CodeChain keystore [![Build Status](https://travis-ci.org/CodeChain-io/codechain-keystore-js.svg?branch=master)](https://travis-ci.org/CodeChain-io/codechain-keystore-js)
+Foundry keystore [![Build Status](https://travis-ci.org/CodeChain-io/foundry-keystore-js.svg?branch=master)](https://travis-ci.org/CodeChain-io/foundry-keystore-js)
 ===================
 
-CodeChain keystore is a private key management library. It saves CodeChain's asset transfer address safely in a disk. If you want to manage CodeChain keys using nodejs, you should use this.
+Foundry keystore is a private key management library. It saves Foundry's account address safely in a disk. If you want to manage Foundry keys using nodejs, you should use this.
 
 Example
 -----------
 
 ```js
-var CCKey = require('codechain-keystore');
+var CCKey = require('foundry-keystore');
 
 async function example() {
   const cckey = await CCKey.create();
