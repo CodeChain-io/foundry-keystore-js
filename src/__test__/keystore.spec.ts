@@ -13,13 +13,13 @@ describe("keystore", () => {
 
     test("importRaw", async () => {
         const privateKey =
-            "a05f81608217738d99da8fd227897b87e8890d3c9159b559c7c8bbd408e5fb6e";
+            "2c459a04538af99de4b5150ccd213392ea683cc33e6e28a4dfbf8d2c5706032a40200442f046f5012df6d6acf8105be68278a6d3bd631603ab86fed89cdf9901";
         const key = await cckey.keystore.importRaw({
             privateKey,
             passphrase: "satoshi"
         });
         const publicKey =
-            "0eb7cad828f1b48c97571ac5fde6add42a7f9285a204291cdc2a03007480dc70639d80c57d80ba6bb02fc2237fec1bb357e405e13b7fb8ed4f947fd8f4900abd";
+            "40200442f046f5012df6d6acf8105be68278a6d3bd631603ab86fed89cdf9901";
         expect(key).toBe(keyFromPublicKey(publicKey));
     });
 
@@ -27,21 +27,21 @@ describe("keystore", () => {
         const secret = {
             crypto: {
                 ciphertext:
-                    "4f870523e834408c08ace7df91671a2b603761f0dbbfd93fa31a5dcda9947515",
-                cipherparams: { iv: "c47d44a36824ee5207cf435795e7e583" },
+                    "b3dc8f6d26b0d1da16f96c74a7f069392a9ac2cdbfaa0a16842928fc224225e0c158308becefa06feb4513327ba2712cb52180928d8001bee2465389a5537a42",
+                cipherparams: { iv: "02ce853ed0b18fb8b59b814462182183" },
                 cipher: "aes-128-ctr",
                 kdf: "pbkdf2",
                 kdfparams: {
                     dklen: 32,
                     salt:
-                        "d187b8eaacbed337261728f33d1dbd51f9532dda82d8c7b8abe4860d2505c43f",
-                    c: 262144,
+                        "4d1f44a96bff17f13652daae92de36ffca5462b2175e13dae2912130e7186b91",
+                    c: 10240,
                     prf: "hmac-sha256"
                 },
                 mac:
-                    "d75a7c45d4c2c4fa4a7b81319e94e27848b188cfed949524f9e6f3b83c66d518"
+                    "b662cf0be237b7515156f0ff5bf1d4b2cfdf148e261c0c43201e116923ecde3f"
             },
-            id: "31ea5ae9-dad4-4a5a-9a8e-9a9de80d619e",
+            id: "14650255-9cc3-6ef2-fd75-12a08127c6e7",
             version: 3,
             meta: "some meta info"
         };
@@ -50,13 +50,13 @@ describe("keystore", () => {
             passphrase: "satoshi"
         });
         const publicKey =
-            "0eb7cad828f1b48c97571ac5fde6add42a7f9285a204291cdc2a03007480dc70639d80c57d80ba6bb02fc2237fec1bb357e405e13b7fb8ed4f947fd8f4900abd";
+            "40200442f046f5012df6d6acf8105be68278a6d3bd631603ab86fed89cdf9901";
         expect(key).toBe(keyFromPublicKey(publicKey));
     });
 
     test("exportKey", async () => {
         const privateKey =
-            "a05f81608217738d99da8fd227897b87e8890d3c9159b559c7c8bbd408e5fb6e";
+            "2c459a04538af99de4b5150ccd213392ea683cc33e6e28a4dfbf8d2c5706032a40200442f046f5012df6d6acf8105be68278a6d3bd631603ab86fed89cdf9901";
         const key = await cckey.keystore.importRaw({
             privateKey,
             passphrase: "satoshi"
@@ -79,21 +79,21 @@ describe("keystore", () => {
         const secret = {
             crypto: {
                 ciphertext:
-                    "4f870523e834408c08ace7df91671a2b603761f0dbbfd93fa31a5dcda9947515",
-                cipherparams: { iv: "c47d44a36824ee5207cf435795e7e583" },
+                    "b3dc8f6d26b0d1da16f96c74a7f069392a9ac2cdbfaa0a16842928fc224225e0c158308becefa06feb4513327ba2712cb52180928d8001bee2465389a5537a42",
+                cipherparams: { iv: "02ce853ed0b18fb8b59b814462182183" },
                 cipher: "aes-128-ctr",
                 kdf: "pbkdf2",
                 kdfparams: {
                     dklen: 32,
                     salt:
-                        "d187b8eaacbed337261728f33d1dbd51f9532dda82d8c7b8abe4860d2505c43f",
-                    c: 262144,
+                        "4d1f44a96bff17f13652daae92de36ffca5462b2175e13dae2912130e7186b91",
+                    c: 10240,
                     prf: "hmac-sha256"
                 },
                 mac:
-                    "d75a7c45d4c2c4fa4a7b81319e94e27848b188cfed949524f9e6f3b83c66d518"
+                    "b662cf0be237b7515156f0ff5bf1d4b2cfdf148e261c0c43201e116923ecde3f"
             },
-            id: "31ea5ae9-dad4-4a5a-9a8e-9a9de80d619e",
+            id: "14650255-9cc3-6ef2-fd75-12a08127c6e7",
             version: 3,
             meta: "some meta info"
         };
@@ -110,7 +110,7 @@ describe("keystore", () => {
 
     test("exportRawKey", async () => {
         const privateKey =
-            "a05f81608217738d99da8fd227897b87e8890d3c9159b559c7c8bbd408e5fb6e";
+            "2c459a04538af99de4b5150ccd213392ea683cc33e6e28a4dfbf8d2c5706032a40200442f046f5012df6d6acf8105be68278a6d3bd631603ab86fed89cdf9901";
         const key = await cckey.keystore.importRaw({
             privateKey,
             passphrase: "satoshi"
@@ -223,9 +223,9 @@ describe("keystore", () => {
 
     test("getPublicKey", async () => {
         const privateKey =
-            "a05f81608217738d99da8fd227897b87e8890d3c9159b559c7c8bbd408e5fb6e";
+            "2c459a04538af99de4b5150ccd213392ea683cc33e6e28a4dfbf8d2c5706032a40200442f046f5012df6d6acf8105be68278a6d3bd631603ab86fed89cdf9901";
         const expectedPublicKey =
-            "0eb7cad828f1b48c97571ac5fde6add42a7f9285a204291cdc2a03007480dc70639d80c57d80ba6bb02fc2237fec1bb357e405e13b7fb8ed4f947fd8f4900abd";
+            "40200442f046f5012df6d6acf8105be68278a6d3bd631603ab86fed89cdf9901";
         const passphrase = "satoshi";
         const key = await cckey.keystore.importRaw({
             privateKey,
@@ -239,6 +239,6 @@ describe("keystore", () => {
             throw Error("Cannot get a public key");
         }
         expect(publicKey).toBe(expectedPublicKey);
-        expect(publicKey.length).toBe(128);
+        expect(publicKey.length).toBe(64);
     });
 });

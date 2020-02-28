@@ -2,8 +2,8 @@ import {
     generatePrivateKey,
     getAccountIdFromPublic,
     getPublicFromPrivate,
-    signEcdsa
-} from "codechain-primitives";
+    signEd25519
+} from "foundry-primitives";
 import * as _ from "lodash";
 import { Context } from "../context";
 import { ErrorCode, KeystoreError } from "../logic/error";
@@ -162,7 +162,7 @@ export async function sign(
     }
 
     const privateKey = await decode(secret, params.passphrase);
-    return signEcdsa(params.message, privateKey);
+    return signEd25519(params.message, privateKey);
 }
 
 export async function getMeta(

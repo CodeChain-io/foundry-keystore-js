@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { blake256 } from "codechain-primitives";
 import * as crypto from "crypto";
+import { blake256 } from "foundry-primitives";
 import * as uuid from "uuid";
 import { SecretSeedStorage, Seed } from "../types";
 import { pbkdf2Async } from "./crypto";
