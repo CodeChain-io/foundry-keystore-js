@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { blake256, getPublicFromPrivate } from "codechain-primitives";
 import * as crypto from "crypto";
+import { blake256, getPublicFromPrivate } from "foundry-primitives";
 import * as uuid from "uuid";
 import { SecretStorage } from "..";
 import { keyFromPublicKey } from "../model/keys";
