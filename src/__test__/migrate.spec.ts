@@ -18,14 +18,6 @@ describe("migrate", () => {
                         "4c00868624282ee68380f07f1d3368be18447453913eb6b91955975d55b9887a91d632b6f8295434d29c2f7910800e4edd1e867fad6ed21aab1f57f1b56845b9"
                 }
             ],
-            asset_keys: [
-                {
-                    secret:
-                        '{"crypto":{"ciphertext":"a3a9c3201cd59668b8c50059bf615ad79bc7e3d7242ed8bedbecb4a539adc824","cipherparams":{"iv":"15d160ab147a3143f7a0f424f0a8818a"},"cipher":"aes-128-ctr","kdf":"pbkdf2","kdfparams":{"dklen":32,"salt":"f050b633d76bbb081925adc4bc2d3871e02fa873a4123cbc1069450b492de2aa","c":262144,"prf":"hmac-sha256"},"mac":"fe025d8bcc9bfe77761f7928500b79643ed89543ff9e4905e083efe2ec716d60"},"id":"e5b859ca-9efd-4a5d-abc7-fd0ad721f57b","version":3}',
-                    publicKey:
-                        "7a57a8c36aa652015f5f736b74655acb89a640e18fcbd1ef91402ca6322b34ea2ca10f97a2456e667d47d60c140380eedb9b350128085da8b788bc75906436a2"
-                }
-            ],
             mapping: {
                 "9c6913351145c88cebd1d16fe47720cb98f796b8":
                     "b71f1a9a5fb63155b7ccc12841867e95a33da91c305158045a6c7c5e575f204828adec3980387a12ef9f159721c853e47e64a37f61407e0131e9e62983cd6d2e",
@@ -37,8 +29,7 @@ describe("migrate", () => {
         });
         const result = JSON.parse(
             await cckey.migrate(oldFormat, {
-                platformPassphrase: ["a", "b"],
-                assetPassphrase: ["c"]
+                platformPassphrase: ["a", "b"]
             })
         );
 
@@ -88,31 +79,6 @@ describe("migrate", () => {
                     },
                     address: "3c25ad001aa929131c2924275b95ef1f86d61a48",
                     id: "e4eaa554-c0c4-48dd-842d-99b3c92419a1",
-                    version: 3
-                }
-            ],
-            asset: [
-                {
-                    crypto: {
-                        ciphertext:
-                            "a3a9c3201cd59668b8c50059bf615ad79bc7e3d7242ed8bedbecb4a539adc824",
-                        cipherparams: {
-                            iv: "15d160ab147a3143f7a0f424f0a8818a"
-                        },
-                        cipher: "aes-128-ctr",
-                        kdf: "pbkdf2",
-                        kdfparams: {
-                            dklen: 32,
-                            salt:
-                                "f050b633d76bbb081925adc4bc2d3871e02fa873a4123cbc1069450b492de2aa",
-                            c: 262144,
-                            prf: "hmac-sha256"
-                        },
-                        mac:
-                            "fe025d8bcc9bfe77761f7928500b79643ed89543ff9e4905e083efe2ec716d60"
-                    },
-                    address: "df87b2faf36eacdf6d4136ad111ce97cfc87170a",
-                    id: "e5b859ca-9efd-4a5d-abc7-fd0ad721f57b",
                     version: 3
                 }
             ],

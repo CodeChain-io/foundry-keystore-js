@@ -1,9 +1,7 @@
 import {
-    blake160,
     generatePrivateKey,
     getAccountIdFromPublic,
     getPublicFromPrivate,
-    H160,
     signEcdsa
 } from "codechain-primitives";
 import * as _ from "lodash";
@@ -109,8 +107,6 @@ export function keyFromPublicKey(type: KeyType, publicKey: PublicKey): Key {
     switch (type) {
         case KeyType.Platform:
             return getAccountIdFromPublic(publicKey);
-        case KeyType.Asset:
-            return H160.ensure(blake160(publicKey)).value;
         default:
             throw new Error("Invalid key type");
     }

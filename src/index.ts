@@ -139,7 +139,6 @@ class CCKey {
     }
 
     public platform: KeyStore = createKeyStore(this.context, KeyType.Platform);
-    public asset: KeyStore = createKeyStore(this.context, KeyType.Asset);
     public hdwseed: HDWKeyStore = createHDKeyStore(this.context);
 
     private constructor(private context: Context) {}
@@ -158,19 +157,13 @@ class CCKey {
 
     public async migrate(
         data: string,
-        params: { assetPassphrase: string[]; platformPassphrase: string[] }
+        params: { platformPassphrase: string[] }
     ): Promise<string> {
         const old = JSON.parse(data);
         const platform_keys: any[] = old.platform_keys;
-        const asset_keys: any[] = old.asset_keys;
         if (platform_keys.length !== params.platformPassphrase.length) {
             throw new Error(
                 "The length of platform key doesn't match with the length of passphrase"
-            );
-        }
-        if (asset_keys.length !== params.assetPassphrase.length) {
-            throw new Error(
-                "The length of asset key doesn't match with the length of passphrase"
             );
         }
         const platform = await Promise.all(
@@ -187,24 +180,9 @@ class CCKey {
                     return storage;
                 })
         );
-        const asset = await Promise.all(
-            asset_keys
-                .map(key => JSON.parse(key.secret))
-                .map(async (storage, i) => {
-                    const passphrase = params.assetPassphrase[i];
-                    const privateKey = await decode(storage, passphrase);
-                    const publicKey = getPublicFromPrivate(privateKey);
-                    storage.address = Keys.keyFromPublicKey(
-                        KeyType.Asset,
-                        publicKey
-                    );
-                    return storage;
-                })
-        );
         return JSON.stringify({
             meta: "{}",
             platform,
-            asset,
             hdwseed: []
         });
     }
@@ -212,12 +190,10 @@ class CCKey {
     public async save(): Promise<string> {
         const meta = await this.getMeta();
         const platform = await this.platform.save();
-        const asset = await this.asset.save();
         const hdwseed = await this.hdwseed.save();
         return JSON.stringify({
             meta,
             platform,
-            asset,
             hdwseed
         });
     }
@@ -226,14 +202,12 @@ class CCKey {
         const data = JSON.parse(value);
         await this.setMeta(data.meta);
         await this.platform.load(data.platform);
-        await this.asset.load(data.asset);
         await this.hdwseed.load(data.hdwseed);
     }
 
     public async clear(): Promise<void> {
         await this.context.db.unset("meta").write();
         await this.platform.clear();
-        await this.asset.clear();
         await this.hdwseed.clear();
         await dbInitialize(this.context.db);
     }
