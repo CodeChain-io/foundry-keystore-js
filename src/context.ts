@@ -48,13 +48,11 @@ export async function storageExist(params: {
     const db = await lowdb(getAdapter(params));
     const meta = db.get("meta").value();
     const platform = db.get(KeyType.Platform).value();
-    const asset = db.get(KeyType.Asset).value();
     const hdwseed = db.get(KeyType.HDWSeed).value();
 
     return (
         (meta != null && meta !== "") ||
         (platform != null && platform.length !== 0) ||
-        (asset != null && asset.length !== 0) ||
         (hdwseed != null && hdwseed.length !== 0)
     );
 }
@@ -77,7 +75,6 @@ export async function createContext(params: {
 export async function closeContext(context: Context): Promise<void> {
     if (context.isVolatile) {
         await context.db.unset("meta").write();
-        await clear(context, { keyType: KeyType.Asset });
         await clear(context, { keyType: KeyType.Platform });
         await hdClear(context);
     }
