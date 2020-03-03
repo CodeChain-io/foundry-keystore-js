@@ -82,7 +82,6 @@ describe("migrate", () => {
                     version: 3
                 }
             ],
-            hdwseed: [],
             meta: "{}"
         };
         expect(result).toEqual(newFormat);
