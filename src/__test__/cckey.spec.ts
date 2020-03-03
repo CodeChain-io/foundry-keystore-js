@@ -15,9 +15,7 @@ describe("cckey", () => {
         const passphrase = "satoshi";
         const platformKey1 = await cckey.keystore.createKey({ passphrase });
         const platformKey2 = await cckey.keystore.createKey({ passphrase });
-        const seedHash = await cckey.hdwseed.createSeed({ passphrase });
         await cckey.setMeta("new meta data");
-
         const saveData = await cckey.save();
         const newCckey = await CCKey.create({ dbType: "in-memory" });
         await newCckey.load(saveData);
@@ -26,7 +24,6 @@ describe("cckey", () => {
             platformKey1,
             platformKey2
         ]);
-        expect(await newCckey.hdwseed.getSeedHashes()).toEqual([seedHash]);
         expect(await newCckey.getMeta()).toBe("new meta data");
     });
 

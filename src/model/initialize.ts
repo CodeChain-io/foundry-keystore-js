@@ -4,8 +4,7 @@ export async function initialize(db: lowdb.LowdbAsync<any>): Promise<void> {
     await db
         .defaults({
             meta: "",
-            platform: [],
-            hdwseed: []
+            platform: []
         })
         .write();
 }

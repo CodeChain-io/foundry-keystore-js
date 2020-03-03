@@ -1,4 +1,3 @@
 export enum KeyType {
-    Platform = "platform",
-    HDWSeed = "hdwseed"
+    Platform = "platform"
 }

@@ -1,7 +1,6 @@
 import * as Lowdb from "lowdb";
 import lowdb = require("lowdb");
 import * as os from "os";
-import { clear as hdClear } from "./model/hdkeys";
 import { initialize as dbInitialize } from "./model/initialize";
 import { clear } from "./model/keys";
 import { KeyType } from "./model/keytypes";
@@ -48,12 +47,10 @@ export async function storageExist(params: {
     const db = await lowdb(getAdapter(params));
     const meta = db.get("meta").value();
     const keystore = db.get(KeyType.Platform).value();
-    const hdwseed = db.get(KeyType.HDWSeed).value();
 
     return (
         (meta != null && meta !== "") ||
-        (keystore != null && keystore.length !== 0) ||
-        (hdwseed != null && hdwseed.length !== 0)
+        (keystore != null && keystore.length !== 0)
     );
 }
 
@@ -76,7 +73,6 @@ export async function closeContext(context: Context): Promise<void> {
     if (context.isVolatile) {
         await context.db.unset("meta").write();
         await clear(context, { keyType: KeyType.Platform });
-        await hdClear(context);
     }
     return Promise.resolve(context.db.write());
 }
