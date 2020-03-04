@@ -138,7 +138,7 @@ class CCKey {
         return storageExist({ dbType, dbPath });
     }
 
-    public platform: KeyStore = createKeyStore(this.context, KeyType.Platform);
+    public keystore: KeyStore = createKeyStore(this.context, KeyType.Platform);
     public hdwseed: HDWKeyStore = createHDKeyStore(this.context);
 
     private constructor(private context: Context) {}
@@ -163,10 +163,10 @@ class CCKey {
         const platform_keys: any[] = old.platform_keys;
         if (platform_keys.length !== params.platformPassphrase.length) {
             throw new Error(
-                "The length of platform key doesn't match with the length of passphrase"
+                "The length of key in keystore doesn't match with the length of passphrase"
             );
         }
-        const platform = await Promise.all(
+        const keystore = await Promise.all(
             platform_keys
                 .map(key => JSON.parse(key.secret))
                 .map(async (storage, i) => {
@@ -182,18 +182,18 @@ class CCKey {
         );
         return JSON.stringify({
             meta: "{}",
-            platform,
+            keystore,
             hdwseed: []
         });
     }
 
     public async save(): Promise<string> {
         const meta = await this.getMeta();
-        const platform = await this.platform.save();
+        const keystore = await this.keystore.save();
         const hdwseed = await this.hdwseed.save();
         return JSON.stringify({
             meta,
-            platform,
+            keystore,
             hdwseed
         });
     }
@@ -201,13 +201,13 @@ class CCKey {
     public async load(value: string): Promise<void> {
         const data = JSON.parse(value);
         await this.setMeta(data.meta);
-        await this.platform.load(data.platform);
+        await this.keystore.load(data.keystore);
         await this.hdwseed.load(data.hdwseed);
     }
 
     public async clear(): Promise<void> {
         await this.context.db.unset("meta").write();
-        await this.platform.clear();
+        await this.keystore.clear();
         await this.hdwseed.clear();
         await dbInitialize(this.context.db);
     }

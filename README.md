@@ -11,10 +11,10 @@ var CCKey = require('foundry-keystore');
 
 async function example() {
   const cckey = await CCKey.create();
-  const savedKeys = await cckey.platform.getKeys();
+  const savedKeys = await cckey.keystore.getKeys();
   console.dir(savedKeys);
-  await cckey.platform.createKey({ passphrase: "my password" });
-  const savedKeys_ = await cckey.platform.getKeys();
+  await cckey.keystore.createKey({ passphrase: "my password" });
+  const savedKeys_ = await cckey.keystore.getKeys();
   console.dir(savedKeys_);
 
   await cckey.close();

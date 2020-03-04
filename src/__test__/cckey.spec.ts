@@ -13,8 +13,8 @@ describe("cckey", () => {
 
     test("saveLoad", async () => {
         const passphrase = "satoshi";
-        const platformKey1 = await cckey.platform.createKey({ passphrase });
-        const platformKey2 = await cckey.platform.createKey({ passphrase });
+        const platformKey1 = await cckey.keystore.createKey({ passphrase });
+        const platformKey2 = await cckey.keystore.createKey({ passphrase });
         const seedHash = await cckey.hdwseed.createSeed({ passphrase });
         await cckey.setMeta("new meta data");
 
@@ -22,7 +22,7 @@ describe("cckey", () => {
         const newCckey = await CCKey.create({ dbType: "in-memory" });
         await newCckey.load(saveData);
 
-        expect(await newCckey.platform.getKeys()).toEqual([
+        expect(await newCckey.keystore.getKeys()).toEqual([
             platformKey1,
             platformKey2
         ]);
@@ -31,11 +31,11 @@ describe("cckey", () => {
     });
 
     test("clear removes key", async () => {
-        const createdKey = await cckey.platform.createKey({
+        const createdKey = await cckey.keystore.createKey({
             passphrase: "satoshi"
         });
-        expect(await cckey.platform.getKeys()).toEqual([createdKey]);
+        expect(await cckey.keystore.getKeys()).toEqual([createdKey]);
         await cckey.clear();
-        expect(await cckey.platform.getKeys()).toEqual([]);
+        expect(await cckey.keystore.getKeys()).toEqual([]);
     });
 });

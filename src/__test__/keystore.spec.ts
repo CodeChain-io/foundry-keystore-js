@@ -2,7 +2,7 @@ import { CCKey } from "../index";
 import { keyFromPublicKey } from "../model/keys";
 import { KeyType } from "../model/keytypes";
 
-describe("platform", () => {
+describe("keystore", () => {
     let cckey: CCKey;
     beforeEach(async () => {
         cckey = await CCKey.create({ dbType: "in-memory" });
@@ -15,7 +15,7 @@ describe("platform", () => {
     test("importRaw", async () => {
         const privateKey =
             "a05f81608217738d99da8fd227897b87e8890d3c9159b559c7c8bbd408e5fb6e";
-        const key = await cckey.platform.importRaw({
+        const key = await cckey.keystore.importRaw({
             privateKey,
             passphrase: "satoshi"
         });
@@ -46,7 +46,7 @@ describe("platform", () => {
             version: 3,
             meta: "some meta info"
         };
-        const key = await cckey.platform.importKey({
+        const key = await cckey.keystore.importKey({
             secret,
             passphrase: "satoshi"
         });
@@ -58,11 +58,11 @@ describe("platform", () => {
     test("exportKey", async () => {
         const privateKey =
             "a05f81608217738d99da8fd227897b87e8890d3c9159b559c7c8bbd408e5fb6e";
-        const key = await cckey.platform.importRaw({
+        const key = await cckey.keystore.importRaw({
             privateKey,
             passphrase: "satoshi"
         });
-        const storage = await cckey.platform.exportKey({
+        const storage = await cckey.keystore.exportKey({
             key,
             passphrase: "satoshi"
         });
@@ -98,11 +98,11 @@ describe("platform", () => {
             version: 3,
             meta: "some meta info"
         };
-        const key = await cckey.platform.importKey({
+        const key = await cckey.keystore.importKey({
             secret,
             passphrase: "satoshi"
         });
-        const storage = await cckey.platform.exportKey({
+        const storage = await cckey.keystore.exportKey({
             key,
             passphrase: "satoshi"
         });
@@ -112,11 +112,11 @@ describe("platform", () => {
     test("exportRawKey", async () => {
         const privateKey =
             "a05f81608217738d99da8fd227897b87e8890d3c9159b559c7c8bbd408e5fb6e";
-        const key = await cckey.platform.importRaw({
+        const key = await cckey.keystore.importRaw({
             privateKey,
             passphrase: "satoshi"
         });
-        const exportedPrivateKey = await cckey.platform.exportRawKey({
+        const exportedPrivateKey = await cckey.keystore.exportRawKey({
             key,
             passphrase: "satoshi"
         });
@@ -124,45 +124,45 @@ describe("platform", () => {
     });
 
     test("createKey", async () => {
-        const key = await cckey.platform.createKey({ passphrase: "satoshi" });
+        const key = await cckey.keystore.createKey({ passphrase: "satoshi" });
         expect(key).toBeTruthy();
         expect(key.length).toBe(40);
     });
 
     test("createKey with an empty passphrase", async () => {
-        const key = await cckey.platform.createKey({ passphrase: "" });
+        const key = await cckey.keystore.createKey({ passphrase: "" });
         expect(key).toBeTruthy();
         expect(key.length).toBe(40);
     });
 
     test("getKeys", async () => {
-        let keys = await cckey.platform.getKeys();
+        let keys = await cckey.keystore.getKeys();
         expect(keys.length).toBe(0);
 
-        const key1 = await cckey.platform.createKey({ passphrase: "satoshi" });
-        const key2 = await cckey.platform.createKey({ passphrase: "satoshi" });
-        keys = await cckey.platform.getKeys();
+        const key1 = await cckey.keystore.createKey({ passphrase: "satoshi" });
+        const key2 = await cckey.keystore.createKey({ passphrase: "satoshi" });
+        keys = await cckey.keystore.getKeys();
         expect(keys).toEqual([key1, key2]);
     });
 
     test("deleteKey", async () => {
         const passphrase = "satoshi";
-        const key1 = await cckey.platform.createKey({ passphrase });
-        const key2 = await cckey.platform.createKey({ passphrase });
-        const originPublicKey2 = await cckey.platform.getPublicKey({
+        const key1 = await cckey.keystore.createKey({ passphrase });
+        const key2 = await cckey.keystore.createKey({ passphrase });
+        const originPublicKey2 = await cckey.keystore.getPublicKey({
             key: key2,
             passphrase
         });
-        await cckey.platform.deleteKey({ key: key1 });
+        await cckey.keystore.deleteKey({ key: key1 });
 
-        const keys = await cckey.platform.getKeys();
+        const keys = await cckey.keystore.getKeys();
         expect(keys).toEqual([key2]);
 
-        const publicKey1 = await cckey.platform.getPublicKey({
+        const publicKey1 = await cckey.keystore.getPublicKey({
             key: key1,
             passphrase
         });
-        const publicKey2 = await cckey.platform.getPublicKey({
+        const publicKey2 = await cckey.keystore.getPublicKey({
             key: key2,
             passphrase
         });
@@ -171,13 +171,13 @@ describe("platform", () => {
     });
 
     test("exportAndImport", async () => {
-        const createdKey = await cckey.platform.createKey({
+        const createdKey = await cckey.keystore.createKey({
             passphrase: "satoshi"
         });
         expect(createdKey).toBeTruthy();
         expect(createdKey.length).toBe(40);
 
-        const secret = await cckey.platform.exportKey({
+        const secret = await cckey.keystore.exportKey({
             key: createdKey,
             passphrase: "satoshi"
         });
@@ -189,7 +189,7 @@ describe("platform", () => {
         expect(secret.crypto).toHaveProperty("kdfparams");
         expect(secret.crypto).toHaveProperty("mac");
 
-        const importedKey = await cckey.platform.importKey({
+        const importedKey = await cckey.keystore.importKey({
             secret,
             passphrase: "satoshi"
         });
@@ -197,29 +197,29 @@ describe("platform", () => {
     });
 
     test("createWithoutMeta", async () => {
-        const createdKey = await cckey.platform.createKey({
+        const createdKey = await cckey.keystore.createKey({
             passphrase: "satoshi"
         });
-        const meta = await cckey.platform.getMeta({ key: createdKey });
+        const meta = await cckey.keystore.getMeta({ key: createdKey });
         expect(meta).toBe("{}");
     });
 
     test("createWithMeta", async () => {
-        const createdKey = await cckey.platform.createKey({
+        const createdKey = await cckey.keystore.createKey({
             passphrase: "satoshi",
             meta: '{"name": "test"}'
         });
-        const meta = await cckey.platform.getMeta({ key: createdKey });
+        const meta = await cckey.keystore.getMeta({ key: createdKey });
         expect(meta).toBe('{"name": "test"}');
     });
 
     test("clear removes key", async () => {
-        const createdKey = await cckey.platform.createKey({
+        const createdKey = await cckey.keystore.createKey({
             passphrase: "satoshi"
         });
-        expect(await cckey.platform.getKeys()).toEqual([createdKey]);
-        await cckey.platform.clear();
-        expect(await cckey.platform.getKeys()).toEqual([]);
+        expect(await cckey.keystore.getKeys()).toEqual([createdKey]);
+        await cckey.keystore.clear();
+        expect(await cckey.keystore.getKeys()).toEqual([]);
     });
 
     test("getPublicKey", async () => {
@@ -228,11 +228,11 @@ describe("platform", () => {
         const expectedPublicKey =
             "0eb7cad828f1b48c97571ac5fde6add42a7f9285a204291cdc2a03007480dc70639d80c57d80ba6bb02fc2237fec1bb357e405e13b7fb8ed4f947fd8f4900abd";
         const passphrase = "satoshi";
-        const key = await cckey.platform.importRaw({
+        const key = await cckey.keystore.importRaw({
             privateKey,
             passphrase
         });
-        const publicKey = await cckey.platform.getPublicKey({
+        const publicKey = await cckey.keystore.getPublicKey({
             key,
             passphrase
         });
