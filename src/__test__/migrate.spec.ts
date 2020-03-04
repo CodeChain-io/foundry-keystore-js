@@ -34,7 +34,7 @@ describe("migrate", () => {
         );
 
         const newFormat = {
-            platform: [
+            keystore: [
                 {
                     crypto: {
                         ciphertext:

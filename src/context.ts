@@ -47,12 +47,12 @@ export async function storageExist(params: {
 }): Promise<boolean> {
     const db = await lowdb(getAdapter(params));
     const meta = db.get("meta").value();
-    const platform = db.get(KeyType.Platform).value();
+    const keystore = db.get(KeyType.Platform).value();
     const hdwseed = db.get(KeyType.HDWSeed).value();
 
     return (
         (meta != null && meta !== "") ||
-        (platform != null && platform.length !== 0) ||
+        (keystore != null && keystore.length !== 0) ||
         (hdwseed != null && hdwseed.length !== 0)
     );
 }
