@@ -25,7 +25,6 @@ import * as crypto from "crypto";
 import * as uuid from "uuid";
 import { SecretStorage } from "..";
 import { keyFromPublicKey } from "../model/keys";
-import { KeyType } from "../model/keytypes";
 import { PrivateKey } from "../types";
 import { pbkdf2Async } from "./crypto";
 import { ErrorCode, KeystoreError } from "./error";
@@ -33,12 +32,11 @@ import { ErrorCode, KeystoreError } from "./error";
 // copy code from https://github.com/ethereumjs/ethereumjs-wallet/blob/4c7cbfc12e142491eb5acc98e612f079aabe092e/src/index.js#L109
 export async function encode(
     privateKey: PrivateKey,
-    keyType: KeyType,
     passphrase: string,
     meta: string
 ): Promise<SecretStorage> {
     const publicKey = getPublicFromPrivate(privateKey);
-    const address = keyFromPublicKey(keyType, publicKey);
+    const address = keyFromPublicKey(publicKey);
     const salt = crypto.randomBytes(32);
     const iv = crypto.randomBytes(16);
 

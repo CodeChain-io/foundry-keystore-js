@@ -4,7 +4,6 @@ import { decode } from "./logic/storage";
 import { initialize as dbInitialize } from "./model/initialize";
 import * as Keys from "./model/keys";
 
-import { KeyType } from "./model/keytypes";
 import { Key, PrivateKey, PublicKey, SecretStorage } from "./types";
 
 export { SecretStorage };
@@ -70,7 +69,7 @@ class CCKey {
         return storageExist({ dbType, dbPath });
     }
 
-    public keystore: KeyStore = createKeyStore(this.context, KeyType.Platform);
+    public keystore: KeyStore = createKeyStore(this.context);
 
     private constructor(private context: Context) {}
 
@@ -104,10 +103,7 @@ class CCKey {
                     const passphrase = params.platformPassphrase[i];
                     const privateKey = await decode(storage, passphrase);
                     const publicKey = getPublicFromPrivate(privateKey);
-                    storage.address = Keys.keyFromPublicKey(
-                        KeyType.Platform,
-                        publicKey
-                    );
+                    storage.address = Keys.keyFromPublicKey(publicKey);
                     return storage;
                 })
         );
@@ -123,7 +119,7 @@ class CCKey {
 
         return JSON.stringify({
             meta,
-            keystore,
+            keystore
         });
     }
 
@@ -141,10 +137,10 @@ class CCKey {
     }
 }
 
-function createKeyStore(context: Context, keyType: KeyType): KeyStore {
+function createKeyStore(context: Context): KeyStore {
     return {
         getKeys: () => {
-            return Keys.getKeys(context, { keyType });
+            return Keys.getKeys(context);
         },
 
         importRaw: (params: {
@@ -152,51 +148,51 @@ function createKeyStore(context: Context, keyType: KeyType): KeyStore {
             passphrase?: string;
             meta?: string;
         }) => {
-            return Keys.importRaw(context, { ...params, keyType });
+            return Keys.importRaw(context, params);
         },
 
         exportKey: (params: { key: Key; passphrase: string }) => {
-            return Keys.exportKey(context, { ...params, keyType });
+            return Keys.exportKey(context, params);
         },
 
         importKey: (params: { secret: SecretStorage; passphrase: string }) => {
-            return Keys.importKey(context, { ...params, keyType });
+            return Keys.importKey(context, params);
         },
 
         exportRawKey: (params: { key: Key; passphrase: string }) => {
-            return Keys.exportRawKey(context, { ...params, keyType });
+            return Keys.exportRawKey(context, params);
         },
 
         getPublicKey: (params: { key: Key; passphrase: string }) => {
-            return Keys.getPublicKey(context, { ...params, keyType });
+            return Keys.getPublicKey(context, params);
         },
 
         createKey: (params: { passphrase?: string; meta?: string }) => {
-            return Keys.createKey(context, { ...params, keyType });
+            return Keys.createKey(context, params);
         },
 
         deleteKey: (params: { key: Key }) => {
-            return Keys.deleteKey(context, { ...params, keyType });
+            return Keys.deleteKey(context, params);
         },
 
         sign: (params: { key: Key; message: string; passphrase: string }) => {
-            return Keys.sign(context, { ...params, keyType });
+            return Keys.sign(context, params);
         },
 
         getMeta: (params: { key: Key }) => {
-            return Keys.getMeta(context, { ...params, keyType });
+            return Keys.getMeta(context, params);
         },
 
         save: () => {
-            return Keys.save(context, { keyType });
+            return Keys.save(context);
         },
 
         load: (value: SecretStorage[]) => {
-            return Keys.load(context, value, { keyType });
+            return Keys.load(context, value);
         },
 
         clear: () => {
-            return Keys.clear(context, { keyType });
+            return Keys.clear(context);
         }
     };
 }

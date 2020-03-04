@@ -1,6 +1,5 @@
 import { CCKey } from "../index";
 import { keyFromPublicKey } from "../model/keys";
-import { KeyType } from "../model/keytypes";
 
 describe("keystore", () => {
     let cckey: CCKey;
@@ -21,7 +20,7 @@ describe("keystore", () => {
         });
         const publicKey =
             "0eb7cad828f1b48c97571ac5fde6add42a7f9285a204291cdc2a03007480dc70639d80c57d80ba6bb02fc2237fec1bb357e405e13b7fb8ed4f947fd8f4900abd";
-        expect(key).toBe(keyFromPublicKey(KeyType.Platform, publicKey));
+        expect(key).toBe(keyFromPublicKey(publicKey));
     });
 
     test("importKey", async () => {
@@ -52,7 +51,7 @@ describe("keystore", () => {
         });
         const publicKey =
             "0eb7cad828f1b48c97571ac5fde6add42a7f9285a204291cdc2a03007480dc70639d80c57d80ba6bb02fc2237fec1bb357e405e13b7fb8ed4f947fd8f4900abd";
-        expect(key).toBe(keyFromPublicKey(KeyType.Platform, publicKey));
+        expect(key).toBe(keyFromPublicKey(publicKey));
     });
 
     test("exportKey", async () => {

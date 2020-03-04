@@ -9,19 +9,15 @@ import { Context } from "../context";
 import { ErrorCode, KeystoreError } from "../logic/error";
 import { decode, encode } from "../logic/storage";
 import { Key, PrivateKey, PublicKey, SecretStorage } from "../types";
-import { KeyType } from "./keytypes";
 
-export async function getKeys(
-    context: Context,
-    params: { keyType: KeyType }
-): Promise<Key[]> {
-    const rows: any = await context.db.get(params.keyType).value();
+export async function getKeys(context: Context): Promise<Key[]> {
+    const rows: any = await context.db.get("key").value();
     return _.map(rows, (secret: SecretStorage) => secret.address) as Key[];
 }
 
 export async function getPublicKey(
     context: Context,
-    params: { key: Key; passphrase: string; keyType: KeyType }
+    params: { key: Key; passphrase: string }
 ): Promise<PublicKey | null> {
     const secret = await getSecretStorage(context, params);
     if (secret == null) {
@@ -36,7 +32,6 @@ export function importRaw(
     params: {
         privateKey: PrivateKey;
         passphrase?: string;
-        keyType: KeyType;
         meta?: string;
     }
 ): Promise<Key> {
@@ -45,7 +40,7 @@ export function importRaw(
 
 export async function exportKey(
     context: Context,
-    params: { key: Key; passphrase: string; keyType: KeyType }
+    params: { key: Key; passphrase: string }
 ): Promise<SecretStorage> {
     const secret = await getSecretStorage(context, params);
     if (secret == null) {
@@ -57,20 +52,19 @@ export async function exportKey(
 
 export async function importKey(
     context: Context,
-    params: { secret: SecretStorage; passphrase: string; keyType: KeyType }
+    params: { secret: SecretStorage; passphrase: string }
 ): Promise<Key> {
     const privateKey = await decode(params.secret, params.passphrase);
     return importRaw(context, {
         privateKey,
         passphrase: params.passphrase,
-        keyType: params.keyType,
         meta: params.secret.meta
     });
 }
 
 export function createKey(
     context: Context,
-    params: { passphrase?: string; keyType: KeyType; meta?: string }
+    params: { passphrase?: string; meta?: string }
 ): Promise<Key> {
     const privateKey = generatePrivateKey();
     return createKeyFromPrivateKey(context, {
@@ -84,7 +78,6 @@ async function createKeyFromPrivateKey(
     params: {
         privateKey: PrivateKey;
         passphrase?: string;
-        keyType: KeyType;
         meta?: string;
     }
 ): Promise<Key> {
@@ -92,29 +85,19 @@ async function createKeyFromPrivateKey(
     const passphrase = params.passphrase || "";
     const meta = params.meta || "{}";
 
-    const secret = await encode(
-        params.privateKey,
-        params.keyType,
-        passphrase,
-        meta
-    );
-    const rows: any = context.db.get(params.keyType);
+    const secret = await encode(params.privateKey, passphrase, meta);
+    const rows: any = context.db.get("key");
     await rows.push(secret).write();
-    return keyFromPublicKey(params.keyType, publicKey);
+    return keyFromPublicKey(publicKey);
 }
 
-export function keyFromPublicKey(type: KeyType, publicKey: PublicKey): Key {
-    switch (type) {
-        case KeyType.Platform:
-            return getAccountIdFromPublic(publicKey);
-        default:
-            throw new Error("Invalid key type");
-    }
+export function keyFromPublicKey(publicKey: PublicKey): Key {
+    return getAccountIdFromPublic(publicKey);
 }
 
 export async function deleteKey(
     context: Context,
-    params: { key: Key; keyType: KeyType }
+    params: { key: Key }
 ): Promise<boolean> {
     const secret = await getSecretStorage(context, params);
     if (secret == null) {
@@ -127,9 +110,9 @@ export async function deleteKey(
 
 async function getSecretStorage(
     context: Context,
-    params: { key: Key; keyType: KeyType }
+    params: { key: Key }
 ): Promise<SecretStorage | null> {
-    const collection: any = context.db.get(params.keyType);
+    const collection: any = context.db.get("key");
     const secret = await collection
         .find(
             (secretStorage: SecretStorage) =>
@@ -145,9 +128,9 @@ async function getSecretStorage(
 
 async function removeKey(
     context: Context,
-    params: { key: Key; keyType: KeyType }
+    params: { key: Key }
 ): Promise<void> {
-    const collection: any = context.db.get(params.keyType);
+    const collection: any = context.db.get("key");
     await collection
         .remove((secret: SecretStorage) => secret.address === params.key)
         .write();
@@ -155,7 +138,7 @@ async function removeKey(
 
 export async function exportRawKey(
     context: Context,
-    params: { key: Key; passphrase: string; keyType: KeyType }
+    params: { key: Key; passphrase: string }
 ) {
     const secret = await getSecretStorage(context, params);
     if (secret == null) {
@@ -171,7 +154,6 @@ export async function sign(
         key: Key;
         message: string;
         passphrase: string;
-        keyType: KeyType;
     }
 ): Promise<string> {
     const secret = await getSecretStorage(context, params);
@@ -185,7 +167,7 @@ export async function sign(
 
 export async function getMeta(
     context: Context,
-    params: { key: Key; keyType: KeyType }
+    params: { key: Key }
 ): Promise<string> {
     const secret = await getSecretStorage(context, params);
     if (secret == null) {
@@ -194,28 +176,14 @@ export async function getMeta(
     return secret.meta;
 }
 
-export function save(
-    context: Context,
-    params: {
-        keyType: KeyType;
-    }
-): Promise<SecretStorage[]> {
-    return context.db.get(params.keyType).value();
+export function save(context: Context): Promise<SecretStorage[]> {
+    return context.db.get("key").value();
 }
 
-export function load(
-    context: Context,
-    value: SecretStorage[],
-    params: {
-        keyType: KeyType;
-    }
-): Promise<void> {
-    return context.db.set(params.keyType, value).write();
+export function load(context: Context, value: SecretStorage[]): Promise<void> {
+    return context.db.set("key", value).write();
 }
 
-export async function clear(
-    context: Context,
-    params: { keyType: KeyType }
-): Promise<void> {
-    await context.db.unset(params.keyType).write();
+export async function clear(context: Context): Promise<void> {
+    await context.db.unset("key").write();
 }

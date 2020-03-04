@@ -3,7 +3,6 @@ import lowdb = require("lowdb");
 import * as os from "os";
 import { initialize as dbInitialize } from "./model/initialize";
 import { clear } from "./model/keys";
-import { KeyType } from "./model/keytypes";
 
 declare var window: any;
 function isBrowser() {
@@ -46,7 +45,7 @@ export async function storageExist(params: {
 }): Promise<boolean> {
     const db = await lowdb(getAdapter(params));
     const meta = db.get("meta").value();
-    const keystore = db.get(KeyType.Platform).value();
+    const keystore = db.get("key").value();
 
     return (
         (meta != null && meta !== "") ||
@@ -72,7 +71,7 @@ export async function createContext(params: {
 export async function closeContext(context: Context): Promise<void> {
     if (context.isVolatile) {
         await context.db.unset("meta").write();
-        await clear(context, { keyType: KeyType.Platform });
+        await clear(context);
     }
     return Promise.resolve(context.db.write());
 }
