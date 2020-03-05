@@ -13,17 +13,14 @@ describe("cckey", () => {
 
     test("saveLoad", async () => {
         const passphrase = "satoshi";
-        const platformKey1 = await cckey.keystore.createKey({ passphrase });
-        const platformKey2 = await cckey.keystore.createKey({ passphrase });
+        const Key1 = await cckey.keystore.createKey({ passphrase });
+        const Key2 = await cckey.keystore.createKey({ passphrase });
         await cckey.setMeta("new meta data");
         const saveData = await cckey.save();
         const newCckey = await CCKey.create({ dbType: "in-memory" });
         await newCckey.load(saveData);
 
-        expect(await newCckey.keystore.getKeys()).toEqual([
-            platformKey1,
-            platformKey2
-        ]);
+        expect(await newCckey.keystore.getKeys()).toEqual([Key1, Key2]);
         expect(await newCckey.getMeta()).toBe("new meta data");
     });
 

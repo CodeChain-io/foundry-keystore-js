@@ -87,25 +87,23 @@ class CCKey {
 
     public async migrate(
         data: string,
-        params: { platformPassphrase: string[] }
+        params: { Passphrase: string[] }
     ): Promise<string> {
         const old = JSON.parse(data);
-        const platform_keys: any[] = old.platform_keys;
-        if (platform_keys.length !== params.platformPassphrase.length) {
+        const keys: any[] = old.keys;
+        if (keys.length !== params.Passphrase.length) {
             throw new Error(
                 "The length of key in keystore doesn't match with the length of passphrase"
             );
         }
         const keystore = await Promise.all(
-            platform_keys
-                .map(key => JSON.parse(key.secret))
-                .map(async (storage, i) => {
-                    const passphrase = params.platformPassphrase[i];
-                    const privateKey = await decode(storage, passphrase);
-                    const publicKey = getPublicFromPrivate(privateKey);
-                    storage.address = Keys.keyFromPublicKey(publicKey);
-                    return storage;
-                })
+            keys.map(key => JSON.parse(key.secret)).map(async (storage, i) => {
+                const passphrase = params.Passphrase[i];
+                const privateKey = await decode(storage, passphrase);
+                const publicKey = getPublicFromPrivate(privateKey);
+                storage.address = Keys.keyFromPublicKey(publicKey);
+                return storage;
+            })
         );
         return JSON.stringify({
             meta: "{}",

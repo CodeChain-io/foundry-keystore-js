@@ -4,7 +4,7 @@ describe("migrate", () => {
     test("migrate", async () => {
         const cckey = await CCKey.create({ dbType: "in-memory" });
         const oldFormat = JSON.stringify({
-            platform_keys: [
+            keys: [
                 {
                     secret:
                         '{"crypto":{"ciphertext":"f4139cc2021a4f839574602d9825e95c2f8d05dc52b50203d64f0b6ff53f4550","cipherparams":{"iv":"280af65c7138efa041ea7994a37c62cd"},"cipher":"aes-128-ctr","kdf":"pbkdf2","kdfparams":{"dklen":32,"salt":"05b56bc53ec8838575e5f243587f0a5b9ad2a2c3aab0df0e400dc78dbc81e4d1","c":262144,"prf":"hmac-sha256"},"mac":"1aa9cc11f124855b88638e97392350f230ac54c3d2efaf214a4246bbadd6c569"},"id":"253f7017-aa61-4797-94ea-7ac4402fd239","version":3}',
@@ -29,7 +29,7 @@ describe("migrate", () => {
         });
         const result = JSON.parse(
             await cckey.migrate(oldFormat, {
-                platformPassphrase: ["a", "b"]
+                Passphrase: ["a", "b"]
             })
         );
 
