@@ -1,6 +1,6 @@
 {
   "name": "foundry-keystore",
-  "version": "0.6.3",
+  "version": "0.1.0",
   "author": "CodeChain Team <hi@codechain.io>",
   "license": "ISC",
   "scripts": {
@@ -11,12 +11,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/CodeChain-io/foundry-keystore.git"
+    "url": "https://github.com/CodeChain-io/foundry-keystore-js.git"
   },
+  "keywords": [
+    "CodeChain",
+    "Foundry"
+  ],
   "bugs": {
-    "url": "https://github.com/codechain-io/foundry-keystore/issues"
+    "url": "https://github.com/codechain-io/foundry-keystore-js/issues"
   },
-  "homepage": "https://github.com/CodeChain-io/foundry-keystore#readme",
+  "homepage": "https://github.com/CodeChain-io/foundry-keystore-js#readme",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
   "files": [
